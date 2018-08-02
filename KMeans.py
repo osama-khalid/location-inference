@@ -9,17 +9,33 @@ from datetime import datetime
 import math
 import operator
 
+maxWords=open('maxWords_OS_IA_W_0_MX_1_htsPopThreshSubStrict','r').read().split('\n')
+allIDs=[]
+maxWord={}
+AllWords=[]
+for row in maxWords:
+    if len(row)>0:
+        ROW=row.split('|')
+        if ROW[0]=='2' or ROW[0]=='1' or ROW[0]=='0':
+            allIDs.append(ROW[1])
+            
+            if ROW[2]==ROW[3]:
+                maxWord[ROW[1]]=ROW[4]
+                AllWords.append(ROW[4])
+                
+
+
 
 
 type=9
-Query=open('tweetIA_Noun.csv',"r")          ############
+Query=open('tweetIA_Hash.csv',"r")          ############
 Query=csv.reader(Query, delimiter=',')      ############
 
 
 
 Q=[]
 for row in Query:
-    Q.append(row)            
+    Q.append(row[:9]+[row[9].lower()]+row[10:])            
 
 t=[]
 User={}
@@ -27,7 +43,7 @@ Word={}
 Locations=[]
 for i in range(len(Q)):
     row=Q[i]
-    
+    if row[1] in allIDs:
         loc=row[5]
         time=row[3].split(" ")[0]
     
