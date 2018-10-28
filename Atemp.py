@@ -250,6 +250,7 @@ class testing(object):
                         if w in trained[c]:
                             count=float(trained[c][w])
                             C=1
+                            
                         else:
                             count=float(0)
                         
@@ -287,12 +288,16 @@ class testing(object):
                         
                 #postPred=self.maxWords(likelihood,mxW,priorWord[time],prior[time])   
                 #likelihood[c]=self.maxWords(featLike,mxW,priorWord[time],float(prior[time][c])/float(sum(prior[time].values())))
-                    
-                        
+                
+                for tempP in prediction[1]:
+                    if len(prediction[1][tempP])>0:
+                        ignore=0
+                    else:
+                        ignore=1
     
                 if C==0:
                     ignore=1
-                        
+                print("\t",ignore)        
                 #prediction=self.normalize(postPred)
                 #ignore=0
                 #if max(prediction.iteritems(), key=operator.itemgetter(1))[1]== min(prediction.iteritems(), key=operator.itemgetter(1))[1]:

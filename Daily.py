@@ -37,6 +37,7 @@ class NaiveBayes(object):
         the 9th (last) column in table is the list of features
         '''
         tweetData=[]
+        filter1=open('data/formats/tweet'+s+'Format','r').read().split('|')
         calendar=[]
         if t=='hashtag':
             print("Generating Data Table for "+s+" with hashtags")
@@ -46,7 +47,7 @@ class NaiveBayes(object):
             with open(path,'r') as csvfile:   
                 readCSV = csv.reader(csvfile, delimiter=',')
                 for row in readCSV:    
-                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff:
+                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff and row[5] in filter1:
                         calendar.append(row[3].split(' ')[0])
                         tweetData.append([row[0:9]+[row[9].lower()]][0])
         if t=='noun':
@@ -55,7 +56,7 @@ class NaiveBayes(object):
             with open(path,'r') as csvfile:   
                 readCSV = csv.reader(csvfile, delimiter=',')
                 for row in readCSV:    
-                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff:
+                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff and row[5] in filter1:
                         calendar.append(row[3].split(' ')[0])
                         tweetData.append([row[0:9]+[row[11].lower()]][0])
                 
@@ -66,7 +67,7 @@ class NaiveBayes(object):
             with open(path,'r') as csvfile:   
                 readCSV = csv.reader(csvfile, delimiter=',')
                 for row in readCSV:    
-                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff:
+                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff and row[5] in filter1:
                         tweetID.append(row[1])
                         calendar.append(row[3].split(' ')[0])
                         tweetData.append([row[0:9]+[','.join([row[9].lower(),row[11].lower()])]][0])
@@ -74,7 +75,7 @@ class NaiveBayes(object):
             with open(path,'r') as csvfile:   
                 readCSV = csv.reader(csvfile, delimiter=',')
                 for row in readCSV:    
-                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff:
+                    if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff and row[5] in filter1:
                         if row[1] not in tweetID:
                             calendar.append(row[3].split(' ')[0])
                             tweetData.append([row[0:9]+[','.join([row[9].lower(),row[11].lower()])]][0])
@@ -316,8 +317,12 @@ class testing(object):
                             
                     #postPred=self.maxWords(likelihood,mxW,priorWord[time],prior[time])   
                     #likelihood[c]=self.maxWords(featLike,mxW,priorWord[time],float(prior[time][c])/float(sum(prior[time].values())))
-                        
-                            
+                    
+                    for tempP in prediction[1]:
+                        if len(prediction[1][tempP])>0:
+                            ignore=0    
+                        else:
+                            ignore=1
         
                     if C==0:
                         ignore=1
