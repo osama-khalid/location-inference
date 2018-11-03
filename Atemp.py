@@ -71,7 +71,10 @@ class NaiveBayes(object):
                     if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff:
                         tweetID.append(row[1])
                         x=x+1
-                        tweetData.append([row[0:9]+[','.join([row[9].lower(),row[11].lower()])]][0])
+                        if len(row[11])>0:
+                            tweetData.append([row[0:9]+[','.join([row[9].lower(),row[11].lower()])]][0])
+                        else:###########'''''''
+                            tweetData.append([row[0:9]+[row[9].lower()]][0])
             path='data/tweet'+s+'_Noun.csv'
             with open(path,'r') as csvfile:   
                 readCSV = csv.reader(csvfile, delimiter=',')
@@ -79,10 +82,13 @@ class NaiveBayes(object):
                     if datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')>self.Cutoff:
                         if row[1] not in tweetID:
                             x=x+1
-                            tweetData.append([row[0:9]+[','.join([row[9].lower(),row[11].lower()])]][0])
+                            if len(row[9])>0:
+                                tweetData.append([row[0:9]+[','.join([row[9].lower(),row[11].lower()])]][0])
+                            else:###########'''''''
+                                tweetData.append([row[0:9]+[row[11].lower()]][0])
                             
         #Calendar is the list of all dates, from the Cutoff to the most recent                    
-        print(x)
+        #print(x)
         print("All Data Loaded")
         return(tweetData)    
 
