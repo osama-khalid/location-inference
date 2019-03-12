@@ -165,7 +165,7 @@ for m in mxW:
 sortbase=sorted(basemxW.items(),key=operator.itemgetter(1),reverse=True)	
 
 for s in sortbase:
-	file1.write(s[0]+'|'+str(s[1])+'|'+str(float(freqmxW[s[0]])/len(input)-1)+'\n')
+	file1.write(s[0]+'|'+str(s[1])+'|'+str(float(freqmxW[s[0]])/len(input))+'\n')
 
 print(wordStat('iowacity',gazette,dictionary))
 print(wordStat('iowaxity',gazette,dictionary))
