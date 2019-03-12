@@ -24,8 +24,8 @@ file1=open('mwFreq.txt','w')
 file2=open('notFoundWords.txt','w')
 file3=open('misspellWords.txt','w')
 
-input=open('tempAtempMWS_IA_htsNouns.txt','r').read().split('\n')
-from nltk.corpus import wordnet as wn
+input=open('tempAtempMWS_IA_htsNouns-Freq.txt','r', encoding="utf-8").read().split('\n')
+#from nltk.corpus import wordnet as wn
 import re
 from collections import Counter
 import operator
@@ -57,7 +57,7 @@ class GazetteDictionary(object):
         self.WORDS = Counter(self.gazette)
 
     def gazetteGenerator(self):
-        file=open(self.statePath,'r').read().split('\n')
+        file=open(self.statePath,'r', encoding="utf-8").read().split('\n')
         localGazette=[]
         for i in range(1,len(file)):
             row=file[i].split('|')
@@ -139,33 +139,37 @@ def wordStat(W,G,D):
     return((W,isDictionary,prob,1,gazetterCorrection))
     
     
-        
+freqmxW={}        
 gazette=GazetteDictionary()
 dictionary=wordFreq()
-
+x=0
 mxW=[]
-for i in input:
-    W=wordStat(i,gazette,dictionary)
-    if W[1]==1:
-        mxW.append([W[0],W[2]])
-
-    if W[3]==1:
-        file3.write(W[0]+'|'+W[4]+'\n')
-    if W[1]==0 and W[3]==0:
-        file2.write(W[0]+'\n')
+for r in input:
+    if len(r) >0:
+        row=r.split('|')
+        i=row[0]
+        
+        W=wordStat(i,gazette,dictionary)
+        if W[1]==1:
+            mxW.append([W[0],W[2]])
+            
+            freqmxW[row[0]]=float(row[1])
+            x=x+float(row[1])
+        if W[3]==1:
+            file3.write(W[0]+'|'+W[4]+'\n')
+        if W[1]==0 and W[3]==0:
+            file2.write(W[0]+'\n')
 #Examples:
-freqmxW={}
+
 basemxW={}
 for m in mxW:
 	basemxW[m[0]]=m[1]
-	if m[0] not in freqmxW:
-		freqmxW[m[0]]=0
-	freqmxW[m[0]]=freqmxW[m[0]]+1
+	
 
-sortbase=sorted(basemxW.items(),key=operator.itemgetter(1),reverse=True)	
+sortbase=sorted(freqmxW.items(),key=operator.itemgetter(1),reverse=True)	
 
 for s in sortbase:
-	file1.write(s[0]+'|'+str(s[1])+'|'+str(float(freqmxW[s[0]])/(len(input)-1))+'\n')
+	file1.write(s[0]+'|'+str(s[1]/float(x))+'|'+str(float(basemxW[s[0]]))+'\n')
 '''
 print(wordStat('iowacity',gazette,dictionary))
 print(wordStat('iowaxity',gazette,dictionary))
