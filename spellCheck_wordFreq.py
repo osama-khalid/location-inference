@@ -20,17 +20,22 @@ Currently the default state is Iowa and the gazetteer being used is the 2012 one
 To change state, just update line 143
 To use a more current gazetteer, update line 55 with the new gazetteer's name
 '''
+file1=open('mwFreq.txt','w')
+file2=open('notFoundWords.txt','w')
+file3=open('misspellWords.txt','w')
 
-
+input=open('tempAtempMWS_IA_htsNouns.txt','r').read().split('\n')
+from nltk.corpus import wordnet as wn
 import re
 from collections import Counter
+import operator
 import operator
 from wordfreq import word_frequency as wf       #pip install wordfreq
 
 
 class wordFreq(object):
     def WORDS(self,word):
-        if wf(word,'en')>0:
+        if wf(word,'en')>=1.0e-07 :#len(wn.synsets(word))>0:
             return(True)
         else:
             return(False)
@@ -138,8 +143,30 @@ def wordStat(W,G,D):
 gazette=GazetteDictionary()
 dictionary=wordFreq()
 
+mxW=[]
+for i in input:
+    W=wordStat(i,gazette,dictionary)
+    if W[1]==1:
+        mxW.append([W[0],W[2]])
 
+    if W[3]==1:
+        file3.write(W[0]+'-'+W[4]+'\n')
+    if W[1]==0 and W[3]==0:
+        file2.write(W[0]+'\n')
 #Examples:
+freqmxW={}
+basemxW={}
+for m in mxW:
+	basemxW[m[0]]=m[1]
+	if m[0] not in freqmxW:
+		freqmxW[m[0]]=0
+	freqmxW[m[0]]=freqmxW[m[0]]+1
+
+sortbase=sorted(basemxW.items(),key=operator.itemgetter(1),reverse=True)	
+
+for s in sortbase:
+	file1.write(s[0]+'|'+str(s[1])+'|'+str(float(freqmxW[s[0]])/len(input)-1)+'\n')
+
 print(wordStat('iowacity',gazette,dictionary))
 print(wordStat('iowaxity',gazette,dictionary))
 print(wordStat('iowacccccccccity',gazette,dictionary))
