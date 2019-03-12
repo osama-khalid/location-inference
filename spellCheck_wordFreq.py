@@ -150,7 +150,7 @@ for i in input:
         mxW.append([W[0],W[2]])
 
     if W[3]==1:
-        file3.write(W[0]+'-'+W[4]+'\n')
+        file3.write(W[0]+'|'+W[4]+'\n')
     if W[1]==0 and W[3]==0:
         file2.write(W[0]+'\n')
 #Examples:
@@ -165,7 +165,7 @@ for m in mxW:
 sortbase=sorted(basemxW.items(),key=operator.itemgetter(1),reverse=True)	
 
 for s in sortbase:
-	file1.write(s[0]+'|'+str(s[1])+'|'+str(float(freqmxW[s[0]])/len(input))+'\n')
+	file1.write(s[0]+'|'+str(s[1])+'|'+str(float(freqmxW[s[0]]))+'\n')
 
 print(wordStat('iowacity',gazette,dictionary))
 print(wordStat('iowaxity',gazette,dictionary))
